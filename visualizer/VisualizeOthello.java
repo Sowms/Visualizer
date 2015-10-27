@@ -12,12 +12,11 @@ import javax.swing.JFrame;
  *
  * @author admin
  */
-public class Visualizer extends JFrame {
-
+public class VisualizeOthello extends javax.swing.JFrame {
     /**
      * @param args the command line arguments which are ignored
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -30,12 +29,19 @@ public class Visualizer extends JFrame {
         } catch (IllegalAccessException ex) {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
         }
-        Visualizer v = new Visualizer();
+        VisualizeOthello v = new VisualizeOthello();
         v.setExtendedState(v.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        v.setTitle("N Queens Visualizer");
-        v.add(new VisualizePanel(new int[]{4,2,7,5,1,8,6,3}));
+        v.setTitle("Othello Visualizer");
+        OthelloPanel op = new OthelloPanel(new String[]{""});
+        v.add(op);
         v.setVisible(true);
         v.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Thread.sleep(1000);
+        op.config = new String[]{"f4"};
+        v.repaint();
+        Thread.sleep(1000);
+        op.config = new String[]{"f4","f5"};
+        v.repaint();
     }
     
 }
