@@ -6,11 +6,14 @@
 
 package visualizer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import javax.swing.JFrame;
 
 /**
  *
- * @author admin
+ * @author sowmya
  */
 public class VisualizeOthello extends javax.swing.JFrame {
     /**
@@ -36,12 +39,22 @@ public class VisualizeOthello extends javax.swing.JFrame {
         v.add(op);
         v.setVisible(true);
         v.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        String[] moves = new String[200];
+        int i = 0;
         Thread.sleep(1000);
-        op.config = new String[]{"f4"};
-        v.repaint();
-        Thread.sleep(1000);
-        op.config = new String[]{"f4","f5"};
-        v.repaint();
+        try (BufferedReader br = new BufferedReader(new FileReader(new File("game.log")))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                moves[i] = line;
+                System.out.println(line);
+                op.config = moves;
+                v.repaint();
+                Thread.sleep(2000);
+                i++;
+            }
+        } catch (Exception e) {
+            
+        }
     }
     
 }

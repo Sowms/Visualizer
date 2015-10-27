@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author admin
+ * @author sowmya
  */
 public class Visualizer extends JFrame {
 

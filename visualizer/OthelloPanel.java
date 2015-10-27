@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author admin
+ * @author sowmya
  */
 public class OthelloPanel extends javax.swing.JPanel {
     String[] config;
@@ -27,11 +27,11 @@ public class OthelloPanel extends javax.swing.JPanel {
         this.config = config;
     }
     private void cellDataDisplay() {
-        for (int i=0; i<8; i++) {
+       /* for (int i=0; i<8; i++) {
             for (int j=0; j<8; j++) 
-                System.out.print(cellData[i][j]+" ");
-            System.out.println("");
-        }
+                //System.out.print(cellData[i][j]+" ");
+            //System.out.println("");
+        }*/
                 
     }
     @Override
@@ -39,6 +39,7 @@ public class OthelloPanel extends javax.swing.JPanel {
         Graphics2D g2 = (Graphics2D) g;
         int startX = 100, startY = 100;
         //board
+        cellDataReset();
         for (int i = 0; i < 8; i++) 
             for (int j = 0; j < 8; j++) {
                 int x = startX + (i * 50);
@@ -66,11 +67,15 @@ public class OthelloPanel extends javax.swing.JPanel {
             }
         
         //config
-        Color[] colors = {Color.red,Color.black};
+        Color[] colors = {Color.black,Color.red};
         int index = 0;
-        for (int i = 0; i < config.length && !config[i].isEmpty(); i++) {
+        for (int i = 0; config[i] != null && i < config.length && !config[i].isEmpty(); i++) {
             int row = config[i].charAt(0) - 97;
             int col = config[i].charAt(1) - 48;
+            if (config[i].charAt(0) == 'p') {
+                index = (index + 1) % 2;
+                continue;
+            }
             cellData[row][col] = colors[index];
             int x = startX + (col * 50) + 25;
             int y = startY + (row * 50) + 25;
@@ -99,7 +104,6 @@ public class OthelloPanel extends javax.swing.JPanel {
                 if (cellData[row][j] == colors[index])
                     break;
             }
-            System.out.println(cellData[row][j]==colors[index]);
             for (int k = col - 1; k >= j && j>=0 && cellData[row][j] == colors[index]; k--) {
                 cellData[row][k] = colors[index];
                 x = startX + (k * 50) + 25;
@@ -128,9 +132,9 @@ public class OthelloPanel extends javax.swing.JPanel {
                 if (cellData[j][col] == colors[index]) 
                     break;
             }
-            System.out.println(cellData[j][col]==colors[index]);
+            boolean flag = false;
             for (int k = row - 1; k >= j && j>=0 && cellData[j][col] == colors[index]; k--) {
-                System.out.println("hi"+k+col);
+                //System.out.println("hi"+k+col+colors[index]+config[i]); flag = true;
                 cellData[k][col] = colors[index];
                 cellDataDisplay();
                 x = startX + (col * 50) + 25;
@@ -139,13 +143,16 @@ public class OthelloPanel extends javax.swing.JPanel {
                 g2.draw(ellipse);
                 g2.fill(ellipse);
             }
+            if (flag) {
+                index = (index+1)%2;
+            continue;}
             for (j = row - 1; j >= 0 && (col + row - j) < 8; j--) {
                 if (cellData[j][col+row-j] == null) 
                     break;
                 if (cellData[j][col+row-j] == colors[index]) 
                     break;
             }
-            for (int k = row - 1; k >= j && j>=0 && (col+row-k) < 8 && cellData[j][col+row-j] == colors[index]; k--) {
+            for (int k = row - 1; k >= j && j>=0 && (col+row-k) < 8  && (col+row-j) < 8 && cellData[j][col+row-j] == colors[index]; k--) {
                 cellData[k][col+row-k] = colors[index];
                 x = startX + ((col+row-k) * 50) + 25;
                 y = startY + (k * 50) + 25;
@@ -173,7 +180,7 @@ public class OthelloPanel extends javax.swing.JPanel {
                 if (cellData[row+j-col][j] == colors[index]) 
                     break;
             }
-            for (int k = col + 1; k <= j && j < 8 && (j + row - col) < 8 && cellData[row+j-col][col] == colors[index]; k++) {
+            for (int k = col + 1; k <= j && j < 8 && (j + row - col) < 8 && cellData[row+j-col][j] == colors[index]; k++) {
                 cellData[row+k-col][k] = colors[index];
                 x = startX + (k * 50) + 25;
                 y = startY + ((row+k-col) * 50) + 25;
@@ -182,15 +189,14 @@ public class OthelloPanel extends javax.swing.JPanel {
                 g2.fill(ellipse);
             }
             for (j = row + 1; j < 8 && (row + col -j) >= 0; j++) {
-                System.out.println(j+"|"+(row-j+col));
                 if (cellData[j][row-j+col] == null) 
                     break;
                 if (cellData[j][row-j+col] == colors[index]) 
                     break;
             }
             for (int k = row + 1; k <= j && j < 8 && (row + col -j) >= 0 && cellData[j][row-j+col] == colors[index]; k++) {
-                cellData[k][row-j+col] = colors[index];
-                x = startX + ((row-j+col) * 50) + 25;
+                cellData[k][row-k+col] = colors[index];
+                x = startX + ((row-k+col) * 50) + 25;
                 y = startY + (k * 50) + 25;
                 ellipse = new Ellipse2D.Double(x-10, y-10, 20, 20);
                 g2.draw(ellipse);
@@ -199,5 +205,11 @@ public class OthelloPanel extends javax.swing.JPanel {
             cellDataDisplay();
             index = (index + 1) % 2;
         }   
+    }
+
+    private void cellDataReset() {
+        for (int i=0; i<8; i++) 
+            for (int j=0; j<8; j++) 
+                cellData[i][j] = null;
     }
 }
